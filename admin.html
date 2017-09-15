@@ -1,0 +1,143 @@
+<html>
+  <head>
+  <head>
+    <title>The Car Builder Admin</title>
+    <style>
+    h3 {
+        border: 1px blue;
+      }
+    </style>
+  </head>
+  <body onload="doAJAXstuff(this.form)">
+  <body style="background-color:#A9A9A9;">
+	<h1 style="text-align: center;color:black"> Car Builder Admin</h1>
+
+
+
+<form action="">
+
+<fieldset>
+
+<h3 style ="background-color:#00BFFF;">Engine Type</h3>
+
+Engine: <br>
+
+
+<div>
+<table id="myTable">
+<tr>
+	<td><h4 style ="background-color:#00BFFF;"> SET1 </h4></td>
+</tr>
+
+</table>
+<br>
+
+<button onclick="">add</button> <button onclick="">remove</button>
+ </div>
+</fieldset>
+</form>
+
+<form action="">
+<fieldset>
+
+<h3 style ="background-color:#00BFFF;">Car Bodies</h3>
+
+CarBodies:
+
+
+<div>
+<table id="myTable">
+<tr>
+	<td><h4 style ="background-color:#00BFFF;"> SET1 </h4></td>
+</tr>
+
+</table>
+
+<button onclick="">add</button> <button onclick="">remove</button>
+ </div>
+</fieldset>
+</form>
+
+<form action="">
+<fieldset>
+<h3 style ="background-color:#00BFFF;">Wheels</h3>
+Wheels:
+
+<div>
+<table id="myTable">
+<tr>
+	<td><h4 style ="background-color:#00BFFF;"> SET1 </h4></td>
+</tr>
+
+</table>
+
+
+<button onclick="">add</button> <button onclick="">remove</button>
+ </div>
+
+ </fieldset>
+ <br> <br>
+ <fieldset>
+	<h3 style ="background-color:#00BFFF;">Workshop Room</h3>
+</fieldset>
+
+ </form>
+</pre>
+
+<script type = "text/javascript">
+// Control queue from here
+function doAJAXstuff(theform) {
+
+  //xmlhttp.open("GET","http://localhost/p1_php/retreive.php",true);
+
+  start();
+}
+
+function start() {
+  // your code here
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       // Typical action to be performed when the document is ready:
+       my_callback(this);
+    }
+  };
+  xmlhttp.open("GET","http://localhost/p1_php/retreive.php",true);
+  xmlhttp.send();
+
+
+
+  //setTimeout(start, 3000);
+
+  // var EngineReq = new XMLHttpRequest();
+  // var BodyReq = new XMLHttpRequest();
+  // var WheelReq = new XMLHttpRequest();
+}
+
+function my_callback(request) {
+      //
+      if (request.status == 200) {
+          var jsonObj = JSON.parse(request.responseText);
+          alert(Object.keys(jsonObj).length);
+          if(Object.keys(jsonObj).length > 0){
+
+          }
+          else{
+
+          }
+          //var teststr = "[{"car_array":{"Engine":"150 horsepower","EngineColor":"blue","Body":"Similar to Ford Fiesta","BodyColor":"blue","Wheel":"WheelType1","WheelColor":"blue"},"v_count":1},{"car_array":{"Engine":"150 horsepower","EngineColor":"blue","Body":"Similar to Ford Fiesta","BodyColor":"blue","Wheel":"WheelType1","WheelColor":"blue"},"v_count":2}]";
+
+          //document.getElementById("thispart").innerHTML = obj;
+  	      //document.getElementById("thispart").style.font = "italic bold 20px arial, serif";
+          //alert("There wasn't an error, just wanted to let you see how an alert works. Received from the server:\n"+request.responseText);
+      }
+
+      else if (request.status=404) {
+  	     alert("Server was not found: data returned is :\n"+request.responseText);
+      }
+
+  }
+
+</script>
+</body>
+</html>
