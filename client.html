@@ -24,7 +24,7 @@
 
 Engine: <select name = "Engine"><br>
 
-<option name="150 horsepower" value="150 horsepower" default> 150 horsepower</option><br>
+<option name="150 horsepower" value="150 horsepower" default>150 horsepower</option><br>
 <option name="250 horsepower" value="250 horsepower">250 horsepower</option><br>
 <option name="400 horsepower" value="400 horsepower">400 horsepower</option><br>
 </select>
@@ -90,10 +90,13 @@ var WheelFree = 0;
 
   function doAJAXstuff(theform) {
     var xmlhttp = new XMLHttpRequest();
+    var xmlhttp2 = new XMLHttpRequest();
+    var xmlhttp3 = new XMLHttpRequest();
+    var xmlhttp4 = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
          // Typical action to be performed when the document is ready:
-         my_callback(this,theform);
+         my_callback(this,theform,xmlhttp2,xmlhttp3,xmlhttp4);
       }
     };
     xmlhttp.open("GET","http://localhost/p1_php/assembler.php?Engine="+theform.Engine.value+
@@ -110,49 +113,57 @@ var WheelFree = 0;
 
   }
 
-  function my_callback(request,theform) {
+  function my_callback(request,theform,xmlhttp2,xmlhttp3,xmlhttp4) {
 
       if (request.status == 200) {
+          //alert(request.responseText);
           var status = JSON.parse(request.responseText);
           if(status['success'] == "true"){
-            uid = status['visit_count'];
+            uid = status['uid'];
+            //alert("uid is"+uid)
             document.getElementById("sub").onclick = function() {
               this.disabled = true;
             }
             //ENGINE REQ
-            var xmlhttp2 = new XMLHttpRequest();
-            xmlhttp2.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                 // Typical action to be performed when the document is ready:
-                 my_callback2(this);
-              }
-            };
-            xmlhttp2.open("GET","http://localhost/p1_php/man_eng.php?Engine="+theform.Engine.value+
-                        "&EngineColor="+theform.EngineColor.value,true);
-            xmlhttp2.send();
-            //Body REQ
-            var xmlhttp2 = new XMLHttpRequest();
-            xmlhttp2.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                 // Typical action to be performed when the document is ready:
-                 my_callback2(this);
-              }
-            };
-            xmlhttp2.open("GET","http://localhost/p1_php/man_eng.php?Engine="+theform.Engine.value+
-                        "&EngineColor="+theform.EngineColor.value,true);
-            xmlhttp2.send();
 
-            //Wheel REQ
-            var xmlhttp3 = new XMLHttpRequest();
+            xmlhttp2.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                 // callback for
+                 my_callback2(this);
+              }
+            };
+            xmlhttp2.open("GET","http://localhost/p1_php/man_eng.php?Engine="+
+            theform.Engine.value+"&EngineColor="+
+            theform.EngineColor.value+"&uid="+uid,true);
+
+
+            //Body REQ
+
             xmlhttp3.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
                  // Typical action to be performed when the document is ready:
-                 my_callback2(this);
+                 my_callback3(this);
               }
             };
-            xmlhttp3.open("GET","http://localhost/p1_php/man_eng.php?Engine="+theform.Engine.value+
-                        "&EngineColor="+theform.EngineColor.value,true);
+
+            xmlhttp3.open("GET","http://localhost/p1_php/man_body.php?Body="+theform.Body.value+
+                        "&BodyColor="+theform.BodyColor.value+"&uid="+uid,true);
+            //xmlhttp3.send();
+
+            //Wheel REQ
+
+            xmlhttp4.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                 // Typical action to be performed when the document is ready:
+                 my_callback4(this);
+              }
+            };
+            xmlhttp4.open("GET","http://localhost/p1_php/man_wheel.php?Wheel="+theform.Wheel.value+
+                        "&WheelColor="+theform.WheelColor.value+"&uid="+uid,true);
+
+            xmlhttp2.send();
             xmlhttp3.send();
+            xmlhttp4.send();
 
 
 
@@ -165,32 +176,100 @@ var WheelFree = 0;
 
           if (request.status == 200) {
               var status = request.responseText;
-              if(status == "done"){
+              alert(status);
+              if (status.includes("done")) {
                   increment++;
                   if(increment == 3){
-                    var endxml = new XMLHttpRequest();
-                    endxml.onreadystatechange = function() {
-                      if (this.readyState == 4 && this.status == 200) {
-                         // Typical action to be performed when the document is ready:
-                         my_callback2(this);
-                      }
-                    };
-                    endxml.open("GET","http://localhost/p1_php/end_user.php?userid="+var,true);
-                    endxml.send();
+                  //   var endxml = new XMLHttpRequest();
+                  //   endxml.onreadystatechange = function() {
+                  //     if (this.readyState == 4 && this.status == 200) {
+                  //        // All the jobs are done. notify to SESSION
+                  //
+                  //     }
+                  //   };
+                  //   //endxml.open("GET","http://localhost/p1_php/end_user.php?userid="+var,true);
+                  //   //endxml.send();
+                  alert("car is done");
                   }
+
               }
-              alert(status);
+
 
               //alert("There wasn't an error, just wanted to let you see how an alert works. Received from the server:\n"+request.responseText);
 
           }
-      }
 
       else if (request.status=404) {
   	     alert("Server was not found: data returned is :\n"+request.responseText);
       }
 
   }
+
+  function my_callback3(request) {
+
+      if (request.status == 200) {
+          var status = request.responseText;
+          alert(status);
+          if (status.includes("done")) {
+              increment++;
+              if(increment == 3){
+              //   var endxml = new XMLHttpRequest();
+              //   endxml.onreadystatechange = function() {
+              //     if (this.readyState == 4 && this.status == 200) {
+              //        // All the jobs are done. notify to SESSION
+              //
+              //     }
+              //   };
+              //   //endxml.open("GET","http://localhost/p1_php/end_user.php?userid="+var,true);
+              //   //endxml.send();
+              //alert("car is done");
+              }
+
+          }
+
+
+          //alert("There wasn't an error, just wanted to let you see how an alert works. Received from the server:\n"+request.responseText);
+
+      }
+
+  else if (request.status=404) {
+     alert("Server was not found: data returned is :\n"+request.responseText);
+  }
+
+}
+
+function my_callback4(request) {
+
+    if (request.status == 200) {
+        var status = request.responseText;
+        alert(status);
+        if (status.includes("done")) {
+            increment++;
+            if(increment == 3){
+               var endxml = new XMLHttpRequest();
+               endxml.onreadystatechange = function() {
+                 if (this.readyState == 4 && this.status == 200) {
+                    // All the jobs are done. notify to SESSION
+                    alert("car is done");
+                 }
+               };
+               endxml.open("GET","http://localhost/p1_php/updater.php?uid="+uid,true);
+               endxml.send();
+
+            }
+
+        }
+
+
+        //alert("There wasn't an error, just wanted to let you see how an alert works. Received from the server:\n"+request.responseText);
+
+    }
+
+else if (request.status=404) {
+   alert("Server was not found: data returned is :\n"+request.responseText);
+}
+
+}
 
   </script>
 

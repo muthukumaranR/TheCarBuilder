@@ -5,4 +5,7 @@ if(isset($_SESSION['queue']))
 {
   echo json_encode($_SESSION['queue']);
 }
+else{
+  echo "No live sessions";
+}
 ?>
